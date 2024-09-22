@@ -1,27 +1,75 @@
-from langchain.memory import ConversationBufferMemory
-from langchain.schema import AIMessage, HumanMessage, SystemMessage
+from langchain.memory import ConversationBufferMemory, ConversationBufferWindowMemory, ConversationSummaryMemory, ConversationSummaryBufferMemory
+from langchain.chains import ConversationChain
+from langchain_google_genai import ChatGoogleGenerativeAI
+from dotenv import load_dotenv  
+import os
+load_dotenv()
 
-# Initialize memory
-memory = ConversationBufferMemory()
+llm = ChatGoogleGenerativeAI(
+    model="gemini-1.5-flash", google_api_key=os.getenv("GOOGLE_API_KEY"))
 
-# Start the conversation with a system message
-memory.save_context({}, {"content": "You are a customer support assistant for an online retail store."})
+memory = ConversationSummaryBufferMemory(llm=llm, max_token_limit=1000)
 
-# Simulate a conversation
-memory.save_context({"input": "Hello, do you have the new iPhone in stock?"}, 
-                   {"output": "Yes, the new iPhone is currently in stock. Would you like to place an order?"})
+chain = ConversationChain(llm=llm, memory=memory)
 
-memory.save_context({"input": "Can you check the status of my order #12345?"}, 
-                   {"output": "Your order #12345 has been shipped and is expected to arrive in 3 days."})
+while True: 
+    user_input = input("You: ")
+    if user_input == "exit":
+        break
+    response = chain.invoke(user_input)
+    print("Final==>>",response)
 
-memory.save_context({"input": "What's your return policy?"}, 
-                   {"output": "Our return policy allows you to return items within 30 days of purchase. Would you like to initiate a return?"})
 
-# Later, the AI might use this memory to respond more intelligently
-for message in memory.load_memory():
-    if isinstance(message, HumanMessage):
-        print(f"User: {message.content}")
-    elif isinstance(message, AIMessage):
-        print(f"AI: {message.content}")
-    elif isinstance(message, SystemMessage):
-        print(f"System: {message.content}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# from langchain.memory import ConversationBufferMemory, ConversationBufferWindowMemory,ConversationSummaryMemory, ConversationSummaryBufferMemory
+# from langchain.chains import ConversationChain
+# from langchain_google_genai import ChatGoogleGenerativeAI
+# from dotenv import load_dotenv
+# import os
+# load_dotenv()
+
+# llm = ChatGoogleGenerativeAI(
+#     model="gemini-1.5-flash", google_api_key=os.getenv("GOOGLE_API_KEY"))
+
+
+# memory = ConversationBufferMemory()
+
+
+# chain = ConversationChain(llm=llm, memory=memory)
+
+# while True: 
+#     user_input = input("You: ")
+#     if user_input == "exit":
+#         break
+#     response = chain.invoke(user_input, user="123")
+#     print("Final==>>",response)
+
+
+
+
+
+

@@ -2,11 +2,14 @@ from langchain_community.document_loaders import TextLoader
 from langchain.indexes import VectorstoreIndexCreator
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+from langchain.memory import ConversationBufferWindowMemory
 import os
 from dotenv import load_dotenv
 load_dotenv()
 
 llm = GoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=os.getenv("GOOGLE_API_KEY"))
+
+memory = ConversationBufferWindowMemory(k=5)
 
 try:
     loader = TextLoader("data.txt")
@@ -29,7 +32,7 @@ index = index_creator.from_loaders([loader])
 # Query the index with the LLM
 while True:
     human_message = input("How i can help you today? ")
-    response = index.query(human_message, llm=llm)
+    response = index.query(human_message, llm=llm, memory=memory)
     print(response)
 
 
