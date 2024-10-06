@@ -20,6 +20,7 @@ bs4 = "^0.0.2"
 langchain-chroma = "^0.1.3"
 faiss-cpu = "^1.8.0.post1"
 langchainhub = "^0.1.21"
+langgraph = "^0.2.26"
 
 
 [build-system]
