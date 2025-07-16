@@ -1,4 +1,5 @@
 /sqlite-autoconf-3360000
 envtext
 sqlite-autoconf-3360000.tar.gz
-.env
+config.bat
+node_modules
